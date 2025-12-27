@@ -8,7 +8,7 @@ export default function ContactSection({
 }:{
   formData: { name: string; email: string; phone: string; service: string; message: string },
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void,
-  handleSubmit: (e?: React.FormEvent<HTMLFormElement>) => void,
+  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void,
 }) {
   return (
     <section className="py-20 bg-gray-100">
