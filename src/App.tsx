@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react-hooks/immutability */
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 
 // Layout
 import Navbar from "./components/layout/NavBar";
@@ -8,53 +7,22 @@ import Footer from "./components/layout/Footer";
 
 // Sections
 import HomeSection from "./components/sections/HomeSections";
-import ServicesSection from "./components/sections/ServicesSections";
 import AboutSection from "./components/sections/AboutSections";
 import ProjectsSection from "./components/sections/ProjectSections";
 import ContactSection from "./components/sections/ContactSections";
-
-/* =========================
-   Scroll Animation Hook
-========================= */
-function useScrollAnimation() {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect(); // animate once
-        }
-      },
-      { threshold: 0.2 }
-    );
-
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
-
-  return { ref, visible };
-}
+import ProductsSection from "./components/sections/ProductsSections";
 
 export default function App() {
   const [activeSection, setActiveSection] = useState("home");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Section Refs (for navbar scroll)
+  // Refs for sections
   const homeRef = useRef<HTMLDivElement>(null);
   const servicesRef = useRef<HTMLDivElement>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
   const projectsRef = useRef<HTMLDivElement>(null);
   const contactRef = useRef<HTMLDivElement>(null);
-
-  // Animation Hooks
-  const homeAnim = useScrollAnimation();
-  const servicesAnim = useScrollAnimation();
-  const aboutAnim = useScrollAnimation();
-  const projectsAnim = useScrollAnimation();
-  const contactAnim = useScrollAnimation();
+  const productsRef = useRef<HTMLDivElement>(null);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -119,9 +87,12 @@ export default function App() {
       about: aboutRef,
       projects: projectsRef,
       contact: contactRef,
+      products: productsRef
     };
 
-    map[section]?.current?.scrollIntoView({ behavior: "smooth" });
+    map[section]?.current?.scrollIntoView({
+      behavior: "smooth",
+    });
   };
 
   // Form handlers
@@ -132,7 +103,7 @@ export default function App() {
   const handleSubmit = (e: any) => {
     e.preventDefault();
 
-    const WHATSAPP_NUMBER = "+917000188012";
+    const WHATSAPP_NUMBER = "+919768477075";
     const { name, email, phone, service, message } = formData;
 
     const text = `
@@ -159,71 +130,26 @@ Message: ${message}
         setMobileMenuOpen={setMobileMenuOpen}
       />
 
-      {/* HOME */}
-      <div
-        ref={(el) => {
-          homeRef.current = el;
-          homeAnim.ref.current = el;
-        }}
-        id="home"
-        className={`transition-all duration-700 ease-out
-        ${homeAnim.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
-      >
+      <div ref={homeRef} id="home">
         <HomeSection scrollToSection={scrollToSection} />
       </div>
 
-      {/* SERVICES */}
-      <div
-        ref={(el) => {
-          servicesRef.current = el;
-          servicesAnim.ref.current = el;
-        }}
-        id="services"
-        className={`transition-all duration-700 ease-out
-        ${servicesAnim.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
-      >
-        <ServicesSection />
+      <div ref={productsRef} id="products">
+        <ProductsSection/>
       </div>
 
-      {/* ABOUT */}
-      <div
-        ref={(el) => {
-          aboutRef.current = el;
-          aboutAnim.ref.current = el;
-        }}
-        id="about"
-        className={`transition-all duration-700 ease-out
-        ${aboutAnim.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
-      >
+      <div ref={aboutRef} id="about">
         <AboutSection />
       </div>
 
-      {/* PROJECTS */}
-      <div
-        ref={(el) => {
-          projectsRef.current = el;
-          projectsAnim.ref.current = el;
-        }}
-        id="projects"
-        className={`transition-all duration-700 ease-out
-        ${projectsAnim.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
-      >
+      <div ref={projectsRef} id="projects">
         <ProjectsSection
           projects={projects}
           testimonials={testimonials}
         />
       </div>
 
-      {/* CONTACT */}
-      <div
-        ref={(el) => {
-          contactRef.current = el;
-          contactAnim.ref.current = el;
-        }}
-        id="contact"
-        className={`transition-all duration-700 ease-out
-        ${contactAnim.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
-      >
+      <div ref={contactRef} id="contact">
         <ContactSection
           formData={formData}
           handleInputChange={handleInputChange}
